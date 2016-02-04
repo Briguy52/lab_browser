@@ -85,19 +85,24 @@ public class BrowserView {
         enableButtons();
         // create scene to hold UI
         myScene = new Scene(root, DEFAULT_SIZE.width, DEFAULT_SIZE.height);
-        //myScene.getStylesheets().add(DEFAULT_RESOURCE_PACKAGE + STYLESHEET);
+        myScene.getStylesheets().add(DEFAULT_RESOURCE_PACKAGE + STYLESHEET);
     }
 
     /**
      * Display given URL.
      */
     public void showPage (String url) {
-        URL valid = myModel.go(url);
+        URL valid = null;
+		try {
+			valid = myModel.go(url);
+		} catch (BrowserException e) {
+			this.showError(e.getMessage());
+		}
         if (valid != null) {
             update(valid);
         }
         else {
-            showError(myResources.getString("PageLoadError") + url);
+            showError(String.format(myResources.getString("PageLoadError") , url, 5));
         }
     }
 
